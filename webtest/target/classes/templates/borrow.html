@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>借阅列表</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+    <!--导航-->
+    <!--inverted:反色、attached:没有圆角，依附在上面:m-padded-tb-mini:m自己定义,padded,上下之间内部间隔,tb上下,mini小点-->
+    <!--m-shadow-small:自定义导航阴影-->
+    <!--导航-->
+    <nav class="ui m-bg attached segment m-padded-tb-mini m-shadow-small" >
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui purple header item">书籍列表</h2>
+                <a href="#" th:href="@{/index}" class="m-item item m-mobile-hide m-black"><i class=" user secret icon"></i>首页</a>
+                <a href="#" th:href="@{/books}" class="m-item item m-mobile-hide m-black"><i class="user secret icon"></i>图书信息</a>
+                <a href="#" th:href="@{/borrow}" class="active m-item item m-mobile-hide m-black"><i class="users secret icon"></i>我的借阅</a>
+                <a href="#" th:href="@{/tocomments}" class="m-item item m-mobile-hide m-black"><i class="users secret icon"></i>缺书反馈</a>
+                <div class="right m-item m-mobile-hide menu" style="z-index: 9 !important;">
+                    <div class="ui dropdown  item">
+                        <div class="text">
+                            <i class="user plus icon " style="width: 20px;height: 20px"></i>
+                            <label th:text="${userMessage.getStuname()}"></label>
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu" style="z-index: 9 !important;">
+                            <a href="#" th:href="@{/alter}" class="item" style="z-index: 9 !important;">修改信息</a>
+                            <a href="#" th:href="@{/logouts}" class="item" style="z-index: 9 !important;">注销</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <!--中间内容-->
+    <div  class="m-container-small m-padded-tb-big animated zoomIn">
+        <div class="ui container">
+            <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+                <i class="close icon"></i>
+                <div class="header">提示：</div>
+                <p th:text="${message}">恭喜，借阅成功！</p>
+            </div>
+
+            <div  class="ui secondary segment form">
+                <input type="hidden" name="pageNum" >
+                <div class="inline fields">
+                    <div class="field">
+                        <input type="text" id="bookId" name="bookId" placeholder="书号">
+                    </div>
+                    <div class="field">
+                        <input type="text" id="name" name="name" placeholder="书名">
+                    </div>
+                    <div class="field">
+                        <button  type="submit" id="search-btn" class="ui purple basic button"><i class="search icon"></i>搜索</button>
+                    </div>
+                </div>
+            </div>
+            <div id="table-container">
+                <table th:fragment="bookList" class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>书名</th>
+                            <th>作者</th>
+                            <th>书号</th>
+                            <th>借阅日期</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="book,iterStat:${pageInfo.list}">
+                            <td th:text="${iterStat.count}">1</td>
+                            <td th:text="${book.getName()}">书名</td>
+                            <td th:text="${book.getAuth()}">作者</td>
+                            <td th:text="${book.getBookId()}">书号</td>
+                            <td th:text="${#dates.format(book.getBorrow().getBorrowDate(),'yyyy-MM-dd HH:mm')}">借阅日期</td>
+                            <td>
+                                <a href="#" th:href="@{/borrow/{bookId}/return(bookId=${book.getBookId()})}" onclick="return confirm('您确定要归还这本书吗？')" class="ui red basic button" style="margin-left: 20%"><h5>还书</h5></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="6" >
+                            <div class="ui mini pagination menu" th:if="${pageInfo.total}>1">
+<!--                                <a class="item" th:href="@{/borrow}">首页</a>-->
+                                <a onclick="page(this)" th:attr="data-page=${pageInfo.firstPage}"  class="item">
+                                    首页
+                                </a>
+                                <a onclick="page(this)" th:attr="data-page=${pageInfo.pageNum}-1"
+                                   th:unless="${pageInfo.isFirstPage}" class="icon item">
+                                    <i class="left chevron icon"></i>
+                                </a>
+                                <a onclick="page(this)" th:each="p : ${pageInfo.navigatepageNums}"
+                                   th:attr="data-page=${p}"
+                                   th:text="${p}" class="item"
+                                   th:classappend="${pageInfo.pageNum}==${p}? 'active'">1</a>
+                                <a onclick="page(this)" th:attr="data-page=${pageInfo.pageNum}+1"
+                                   th:unless="${pageInfo.isLastPage}" class="icon item">
+                                    <i class="right chevron icon"></i>
+                                </a>
+                                <a onclick="page(this)" th:attr="data-page=${pageInfo.pages}" class="item">
+                                    尾页
+                                </a>
+<!--                                <a class="item" th:href="@{/borrow(pageNum=${pageInfo.pages})}">尾页</a>-->
+                            </div>
+                            <p >当前第<span th:text="${pageInfo.pageNum}"></span>页
+                                总<span th:text="${pageInfo.pages}"></span>页
+                                共<span th:text="${pageInfo.total}"></span>条记录</p>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <!--底部footer-->
+    <footer th:fragment="footer" class="ui m-bg animated fadeInUp inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div id="newblog-container">
+                    </div>
+                </div>
+                <div class="three wide column">
+
+                </div>
+            </div>
+            <div class="ui inverted m-black section divider"></div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+    <script>
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        //消息提示关闭初始化
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade');
+            });
+
+        function page(obj) {
+            $("[name='pageNum']").val($(obj).data("page"));//获取page隐含域赋值
+            loaddata();
+        }
+
+        // 点击事件；page清零，搜索不会查询某一页
+        $("#search-btn").click(function () {
+            // $("[name='pageNum']").val(0);
+            loaddata();
+        });
+
+        //用来请求发送数据
+        function loaddata() {
+            $("#table-container").load(/*[[@{/borrow/search}]]*/"/borrow/search",{
+                bookId : $("[name='bookId']").val(),
+                name : $("[name='name']").val(),
+                pageNum : $("[name='pageNum']").val()
+            });
+        }
+
+    </script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+
+</body>
+</html>

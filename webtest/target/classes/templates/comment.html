@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>缺书反馈</title>
+    <!--通过CDN引入Semantic-UI-->
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="https://i.icomoon.io/public/temp/d0ca2ba9f1/UntitledProject/style.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+    <nav class="ui m-bg attached segment m-padded-tb-mini m-shadow-small" >
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui purple header item">图书借阅系统</h2>
+                <a href="#" th:href="@{/index}" class=" m-item item m-mobile-hide m-black"><i class=" user secret icon"></i>首页</a>
+                <a href="#" th:href="@{/books}" class="m-item item m-mobile-hide m-black"><i class="user secret icon"></i>图书信息</a>
+                <a href="#" th:href="@{/borrow}" class="m-item item m-mobile-hide m-black"><i class="users secret icon"></i>我的借阅</a>
+                <a href="#" th:href="@{/comment}" class=" active m-item item m-mobile-hide m-black"><i class="users secret icon"></i>缺书反馈</a>
+                <div class="right m-item m-mobile-hide menu pink">
+                    <div class="ui right dropdown purple item">
+                        <div class="text" >
+                            <i class="user plus icon " style="width: 20px;height: 20px"></i>
+                            <label th:text="${userById.getStuname()}"></label>
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a href="#" th:href="@{/logouts}" class="item">注销</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big animated fadeInUp" >
+        <div class="ui container">
+            <div class="ui bottom attached segment">
+
+                <form id="comment-form" class="ui form" method="post" th:action="@{/comments}">
+                    <!--父级评论隐含域-->
+                    <input type="hidden" name="parentCommentId" value="-1">
+                    <!--field:表单里面放置的区域-->
+                    <div class="field">
+                        <textarea name="content" placeholder="请输入评论信息..."></textarea>
+                    </div>
+                    <div class="fields">
+                        <div class="field m-mobile-wide m-margin-bottom-small">
+                            <!--icon input:图标在inpput里面-->
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" name="nickname" placeholder="评论名" th:value="${userById}!=null ? ${userById.getStuname()}">
+                            </div>
+                        </div>
+                        <!--发布评论的按钮-->
+                        <div class="field m-mobile-wide  m-margin-bottom-small">
+                            <button id="commentpost-btn2" type="submit" class="ui teal button m-mobile-wide"><i class="edit icon"></i>发布</button>
+                        </div>
+                    </div>
+                </form>
+                <!--留言区-->
+                <!--留言区域列表-->
+                <div id="comment-container" class="ui teal segment">
+                    <div>
+                        <div class="ui threaded comments" style="max-width: 100%;">
+                            <h3 class="ui dividing header">评论</h3>
+                            <div class="comment" th:each="comment : ${comments}">
+                                <a class="avatar">
+                                    <img src="../static/image/user.png" th:src="@{/image/user.png}">
+                                </a>
+                                <div class="content">
+                                    <a class="author">
+                                        <span th:text="${comment.nickname}">Matt</span>
+                                        <div class="ui mini basic red left pointing label m-padded-mini" th:if="${comment.adminComment}">管理员</div>
+                                    </a>
+                                    <div class="metadata">
+                                        <span class="date" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                    </div>
+                                    <div class="text" th:text="${comment.content}">
+                                        How artistic!
+                                    </div>
+                                    <div class="actions">
+                                        <a class="reply" data-commentid="1" data-commentnickname="Matt" th:attr="data-commentid=${comment.id},data-commentnickname=${comment.nickname}" onclick="reply(this)">回复</a>
+                                        <a class="delete" href="#" th:if="${userById.getRole()=='admin'}" th:href="@{/comment/{param}/delete(param=${comment.id})}" onclick="return confirm('确定要删除该评论吗？三思啊! 删了可就没了！')">删除</a>
+                                    </div>
+                                </div>
+                                <!--这里是嵌套的-->
+                                <div class="comments" th:if="${#arrays.length(comment.replyComments)}>0">   <!--判断大于0，才显示这块区域-->
+                                    <div class="comment" th:each="reply : ${comment.replyComments}">    <!--评论子类-->
+                                        <a class="avatar">
+                                            <img src="../static/image/user.png" th:src="@{/image/user.png}">
+                                        </a>
+                                        <div class="content">
+                                            <a class="author" >
+                                                <span th:text="${reply.nickname}">小红</span>
+                                                <div class="ui mini basic red left pointing label m-padded-mini" th:if="${reply.adminComment}">管理员</div>
+                                                &nbsp;<span th:text="|@ ${reply.parentNickname}|" class="m-teal">@ 小白</span>
+                                                <!--显示出某某某@某某某-->
+                                            </a>
+                                            <div class="metadata">
+                                                <span class="date" th:text="${#dates.format(reply.createTime,'yyyy-MM-dd HH:mm')}">Today at 5:42PM</span>
+                                            </div>
+                                            <div class="text" th:text="${reply.content}">
+                                                This has been very useful for my research. Thanks as well!
+                                            </div>
+                                            <div class="actions">
+                                                <a class="reply" data-commentid="1" data-commentnickname="Matt" th:attr="data-commentid=${reply.id},data-commentnickname=${reply.nickname}" onclick="reply(this)">回复</a>
+                                                <a class="delete" href="#" th:if="${userById.getRole()=='admin'}" th:href="@{/comment/{param}/delete(param=${comment.id})}" onclick="return confirm('确定要删除该评论吗？三思啊! 删了可就没了！')">删除</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/*-->
+<!--                            <div class="comment">-->
+<!--                                <a class="avatar">-->
+<!--                                    <img src="../static/image/user.png">-->
+<!--                                </a>-->
+<!--                                <div class="content">-->
+<!--                                    <a class="author">Elliot Fu</a>-->
+<!--                                    <div class="metadata">-->
+<!--                                        <span class="date">Yesterday at 12:30AM</span>-->
+<!--                                    </div>-->
+<!--                                    <div class="text">-->
+<!--                                        <p>This has been very useful for my research. Thanks as well!</p>-->
+<!--                                    </div>-->
+<!--                                    <div class="actions">-->
+<!--                                        <a class="reply">回复</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="comments">-->
+<!--                                    <div class="comment">-->
+<!--                                        <a class="avatar">-->
+<!--                                            <img src="../static/image/user.png">-->
+<!--                                        </a>-->
+<!--                                        <div class="content">-->
+<!--                                            <a class="author">Jenny Hess</a>-->
+<!--                                            <div class="metadata">-->
+<!--                                                <span class="date">Just now</span>-->
+<!--                                            </div>-->
+<!--                                            <div class="text">-->
+<!--                                                Elliot you are always so right :)-->
+<!--                                            </div>-->
+<!--                                            <div class="actions">-->
+<!--                                                <a class="reply">回复</a>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="comment">-->
+<!--                                <a class="avatar">-->
+<!--                                    <img src="../static/image/user.png">-->
+<!--                                </a>-->
+<!--                                <div class="content">-->
+<!--                                    <a class="author">Joe Henderson</a>-->
+<!--                                    <div class="metadata">-->
+<!--                                        <span class="date">5 days ago</span>-->
+<!--                                    </div>-->
+<!--                                    <div class="text">-->
+<!--                                        Dude, this is awesome. Thanks so much-->
+<!--                                    </div>-->
+<!--                                    <div class="actions">-->
+<!--                                        <a class="reply">回复</a>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <!--*/-->
+
+                        </div>
+                    </div>
+                </div>
+                <!--comments:UI的留言板框架↑-->
+
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <!--底部footer-->
+    <footer th:fragment="footer" class="ui m-bg animated fadeInUp inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div id="newblog-container">
+                    </div>
+                </div>
+                <div class="three wide column">
+
+                </div>
+            </div>
+            <div class="ui inverted m-black section divider"></div>
+        </div>
+    </footer>
+
+<!--通过CDN引入Semantic-UI(也可通过本地下载引入)-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+    <script>
+        //<!--jQuery获取这个元素-->
+        $('.menu.toggle').click(function () {//toggleClass开关一样的样式
+            $('.m-item').toggleClass('m-mobile-hide');//m-item:获取那几个列表，点击的时候处理m-mobile-hide
+        });
+        $('#togglePassword').click(function(){
+            if($(this).hasClass('icon-eye')){
+                $('#password1').hide();
+                $('#password2').show();
+                $(this).removeClass('icon-eye').addClass('icon-eye-blocked');
+            }else{
+                $('#password1').show();
+                $('#password2').hide();
+                $(this).removeClass('icon-eye-blocked').addClass('icon-eye');
+            }
+        });
+        $('#password1').change(function () {
+            $('#password2').val($(this).val());
+        });
+        $('#password2').change(function () {
+            $('#password1').val($(this).val());
+        });
+        //评论表单验证
+        $('.ui.form').form({
+            fields : {
+                username : {
+                    identifier: 'nickname',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入用户名'
+                    }]
+                }
+            }
+        });
+
+        // $(function () {
+        //     $("#comment-container").load(/*[[@{/tocomments}]]*/"/tocomments");
+        // });
+
+        $('#commentpost-btn').click(function () {
+            var boo = $('.ui.form').form('validate form');
+            if (boo) {
+                console.log('校验成功');
+                postData();
+            } else {
+                console.log('校验失败');
+            }
+        });
+        //提交数据
+        function postData() {
+            $("#comment-container").load(/*[[@{/comments}]]*/"/comments",{
+                "parentCommentId" : $("[name='parentComment.id']").val(),
+                "nickname": $("[name='nickname']").val(),
+                "content" : $("[name='content']").val()
+            },function (responseTxt, statusTxt, xhr) {
+                clearContent();
+            });
+        }
+        function clearContent() {
+            $("[name='content']").val('');
+            $("[name='parentComment.id']").val(-1);
+            $("[name='content']").attr("placeholder", "请输入评论信息...");
+        }
+        function reply(obj) {
+            var commentId = $(obj).data('commentid');
+            var commentNickname = $(obj).data('commentnickname');
+            // alert(commentId)
+            // alert(commentNickname)
+            $("[name='content']").attr("placeholder", "@"+commentNickname).focus();
+            // $("[name='parentComment.id']").val(commentId);
+            $("[name='parentCommentId']").val(commentId);
+            $(window).scrollTo($('#comment-form'),500);
+        }
+    </script>
+
+</body>
+</html>

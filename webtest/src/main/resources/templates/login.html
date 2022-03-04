@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎登陆</title>
+    <!--通过CDN引入Semantic-UI-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+<!--    <link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}" tppabs="../static/css/style.css" />-->
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <script src="../static/js/jquery.js" th:src="@{/js/jquery.js}"></script>
+    <script src="../static/js/verificationNumbers.js" th:src="@{/js/verificationNumbers.js}" tppabs="../static/js/verificationNumbers.js"></script>
+    <script src="../static/js/Particleground.js" th:src="@{/js/Particleground.js}" tppabs="../static/js/Particleground.js"></script>
+</head>
+<body>
+    <nav class="ui m-bg attached segment m-padded-tb-mini m-shadow-small animated fadeInDown" >
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui purple header item">图书借阅系统</h2>
+                <div class=" right m-item m-mobile-hide menu">
+                    <div class="ui right dropdown item">
+                        <div class="text" >
+                            <i class="user plus icon " style="width: 20px;height: 20px"></i>
+                            Welcome
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+<!--                            <a href="#" th:href="@{/alter}" class="item">修改信息</a>-->
+<!--                            <a href="#" th:href="@{/logout}" class="item">注销</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big animated fadeInUp" >
+        <!--ui提供的container:提供的宽度固定，显示最好的显示效果-->
+        <div class="ui container">
+
+            <div class="ui stackable grid">
+                <div class="eleven wide column animated rotateInDownLeft">
+                    <div class="ui attached segment">
+                        <img src="../static/image/aboutCodeSleep.jpg" th:src="@{/image/aboutCodeSleep.jpg}" alt="" class="ui rounded image">
+                    </div>
+                </div>
+                <div class="five wide column animated rotateInDownRight">
+                    <div class="ui top attached segment">
+                        <div class="ui center aligned header">欢迎登陆我的图书馆</div>
+                    </div>
+                    <div class="ui segment">
+                        <div class="login_box">
+                            <div class="tit">
+                                <h5 class="ui m-right-top" style="margin: 15px">还没有账号？&emsp;-><a href="#" th:href="@{/toRegister}" >立即注册<-</a></h5>
+                            </div>
+                            <div class="msg_cont" style="margin: 50px">
+                                <b></b>
+                                <span class="errorMsg"></span>
+                            </div>
+                            <div>
+                                <form action="#" class="ui form" method="post" th:action="@{/login}" >
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" id="username" name="username" placeholder="用户名">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="lock icon"></i>
+                                            <input type="password" id="password" name="password" placeholder="密码">
+                                        </div>
+                                    </div>
+                                    <button class="ui fluid large positive submit button" type="submit">登   录</button>
+                                    <div class="ui error mini message"></div>	<!--错误信息显示在这里-->
+                                    <div class="ui mini negative message" th:unless="${#strings.isEmpty(message)}" th:text="${message}">用户名和密码错误</div>
+                                    <!--有值的情况下才会显示；negative；红色提示-->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <!--底部footer-->
+    <footer th:fragment="footer" class="ui m-bg animated fadeInUp inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div id="newblog-container">
+                    </div>
+                </div>
+                <div class="three wide column">
+
+                </div>
+            </div>
+            <div class="ui inverted m-black section divider"></div>
+        </div>
+    </footer>
+
+<!--通过CDN引入Semantic-UI(也可通过本地下载引入)-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+    <script>
+        //<!--jQuery获取这个元素-->
+        $('.menu.toggle').click(function () {//toggleClass开关一样的样式
+            $('.m-item').toggleClass('m-mobile-hide');//m-item:获取那几个列表，点击的时候处理m-mobile-hide
+        });
+
+        $('.ui.form').form({
+            fields : {
+                username : {
+                    identifier: 'username',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入用户名'
+                    }]
+                },
+                password : {
+                    identifier: 'password',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入密码'
+                    }]
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑图书信息</title>
+    <!--通过CDN引入Semantic-UI-->
+    <link rel="stylesheet" href="../../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="https://i.icomoon.io/public/temp/d0ca2ba9f1/UntitledProject/style.css">
+    <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+    <nav class="ui m-bg attached segment m-padded-tb-mini m-shadow-small" >
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui purple header item">后台管理</h2>
+                <a href="#" th:href="@{/admin/index}"class="m-item item m-mobile-hide m-black"><i class=" user secret icon"></i>欢迎页</a>
+                <a href="#" th:href="@{/admin/students}"  class="m-item item m-mobile-hide m-black"><i class="user secret icon"></i>学生信息</a>
+                <a href="#" th:href="@{/admin/books}" class="active m-item item m-mobile-hide m-black"><i class="users secret icon"></i>图书信息</a>
+                <div class="right m-item m-mobile-hide menu">
+                    <div class="ui dropdown  item">
+                        <div class="text">
+                            <img class="ui avatar image" src="/image/aboutCodeSleep.jpg" th:src="@{/image/aboutCodeSleep.jpg}">
+                            管理员
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a href="#" th:href="@{/admin/logout}" class="item">注销</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big animated fadeInUp" >
+        <!--ui提供的container:提供的宽度固定，显示最好的显示效果-->
+        <div class="ui container">
+            <div class="ui stackable grid">
+                <div class="two wide column animated rotateInDownLeft">
+
+                </div>
+                <div class="six wide column animated zoomIn">
+                    <!--根据是否有bookid来判断是编辑还是添加-->
+                    <form class="ui form" action="#" method="post" th:object="${books}" th:action="*{id}==null ? @{/admin/books/add} : @{/admin/books/update} ">
+                        <!--传递ID-->
+                        <input type="hidden" name="id" th:value="*{id}">
+                        <div class="ui top attached segment">
+                            <div class="ui center aligned header"> -编辑图书信息- </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label"style="margin-left: 20px">书名</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="user icon"></i>
+                                    <input type="text" th:value="*{name}" id="name" name="name" placeholder="书名" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px" >作者</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="book icon"></i>
+                                    <input type="text" th:value="*{auth}" id="auth" name="auth" placeholder="作者" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px">库存</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="beer icon"></i>
+                                    <input type="text" th:value="*{count}" id="count" name="count" placeholder="库存" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui error mini message"></div>	<!--错误信息显示在这里-->
+                            <div class="ui mini negative message" th:unless="${#strings.isEmpty(message)}" th:text="${message}">用户名和密码错误</div>
+                            <button class="ui fluid large teal submit button" type="submit">提交</button>
+                        </div>
+                </form>
+                </div>
+
+                <div class="five wide column animated rotateInDownRight">
+                    <div class="ui attached segment">
+                        <div class="ui top attached segment">
+                            <div class="ui center aligned header"> --图书管理-- </div>
+                        </div>
+                        <div class="ui segment">
+                            <img src="../static/image/aboutCodeSleep.jpg" th:src="@{/image/aboutCodeSleep.jpg}" alt="" class="ui rounded image">
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic left pointing label">自然</div>
+                            <div class="ui orange basic left pointing label">科学</div>
+                            <div class="ui orange basic left pointing label">生活</div>
+                            <div class="ui orange basic left pointing label">学习</div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">Spring</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">Mybatis</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">Vue</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
+                            <div class="ui teal basic left pointing label m-margin-tb-tiny">...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column animated rotateInDownRight">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <!--底部footer-->
+    <footer th:fragment="footer" class="ui m-bg animated fadeInUp inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div id="newblog-container">
+                    </div>
+                </div>
+                <div class="three wide column">
+
+                </div>
+            </div>
+            <div class="ui inverted m-black section divider"></div>
+        </div>
+    </footer>
+
+<!--通过CDN引入Semantic-UI(也可通过本地下载引入)-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+    <script>
+        //<!--jQuery获取这个元素-->
+        $('.menu.toggle').click(function () {//toggleClass开关一样的样式
+            $('.m-item').toggleClass('m-mobile-hide');//m-item:获取那几个列表，点击的时候处理m-mobile-hide
+        });
+
+        $('.wechat').popup({                //获取wechat，鼠标控制他的时候发生事件
+            popup : $('.wechat-qr'),        //获取wechat-qr，弹出来
+            position: 'bottom center'       //position位置：在中下的位置触发
+        });
+
+        $('.qq').popup();
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        $('#togglePassword').click(function(){
+            if($(this).hasClass('icon-eye')){
+                $('#password1').hide();
+                $('#password2').show();
+                $(this).removeClass('icon-eye').addClass('icon-eye-blocked');
+            }else{
+                $('#password1').show();
+                $('#password2').hide();
+                $(this).removeClass('icon-eye-blocked').addClass('icon-eye');
+            }
+        });
+        $('#password1').change(function () {
+            $('#password2').val($(this).val());
+        });
+        $('#password2').change(function () {
+            $('#password1').val($(this).val());
+        });
+
+        $('.ui.form').form({
+            fields : {
+                username : {
+                    identifier: 'username',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入用户名'
+                    }]
+                },
+                stuname : {
+                    identifier: 'stuname',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入姓名'
+                    }]
+                },
+                password : {
+                    identifier: 'password',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入密码'
+                    }]
+                },
+                stuid : {
+                    identifier: 'stuid',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入学号'
+                    }]
+                },
+                classes : {
+                    identifier: 'classes',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入班级'
+                    }]
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

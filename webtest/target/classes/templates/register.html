@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--移动端预览-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <!--通过CDN引入Semantic-UI-->
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="https://i.icomoon.io/public/temp/d0ca2ba9f1/UntitledProject/style.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+    <nav class="ui m-bg attached segment m-padded-tb-mini m-shadow-small" >
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui purple header item">图书借阅系统</h2>
+
+                <div class="right m-item m-mobile-hide menu pink">
+                    <div class="ui right dropdown purple item">
+                        <div class="text" >
+                            <i class="user plus icon " style="width: 20px;height: 20px"></i>
+                        </div>
+                        <i class="dropdown icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </nav>
+
+    <!--中间内容-->
+    <div class="m-container-small m-padded-tb-big animated fadeInUp" >
+        <!--ui提供的container:提供的宽度固定，显示最好的显示效果-->
+        <div class="ui container">
+            <div class="ui stackable grid">
+                <div class="two wide column animated rotateInDownLeft">
+
+                </div>
+                <div class="six wide column animated zoomIn">
+                    <form class="ui form" action="#" method="post" th:action="@{/register}">
+                        <div class="ui top attached segment">
+                            <div class="ui center aligned header">-欢迎注册图书借阅系统- </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label"style="margin-left: 20px">用户名</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="user icon"></i>
+                                    <input type="text" id="username" name="username" placeholder="用户名" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px" >姓名</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="book icon"></i>
+                                    <input type="text" id="stuname" name="stuname" placeholder="姓名" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px">性别</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <select  class="ui search dropdown" name="sex" id="sex">
+                                        <option value="1">男</option>
+                                        <option value="0">女</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px">密码</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+    <!--                                <i class="eye slash outline icon"></i>-->
+                                    <i class="fa icon-eye icon-eye-blocked" id="togglePassword"></i>
+                                    <input type="password" id="password1" name="password1" placeholder="密码" >
+                                    <input type="text" id="password2" name="password" placeholder="密码" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px">学号</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="beer icon"></i>
+                                    <input type="text" id="stuid" name="stuid" placeholder="学号" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui orange basic right pointing label" style="margin-left: 20px">专业班级</div>
+                            <div class="field" style="position: absolute ;left: 29%;top: 17%">
+                                <div class="ui left icon input">
+                                    <i class="clone icon"></i>
+                                    <input type="text" id="classes" name="classes" placeholder="专业班级" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui attached segment">
+                            <div class="ui error mini message"></div>	<!--错误信息显示在这里-->
+                            <div class="ui mini negative message" th:unless="${#strings.isEmpty(message)}" th:text="${message}">用户名和密码错误</div>
+                            <button class="ui fluid large teal submit button" type="submit">立即注册</button>
+                        </div>
+                </form>
+                </div>
+
+                <div class="five wide column animated rotateInDownRight">
+                    <div class="ui attached segment">
+                        <div class="ui top attached segment">
+                            <div class="ui center aligned header"> --欢迎光临-- </div>
+                        </div>
+                        <div class="ui segment">
+                            <img src="../static/image/aboutCodeSleep.jpg" th:src="@{/image/aboutCodeSleep.jpg}" alt="" class="ui rounded image">
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column animated rotateInDownRight">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <!--底部footer-->
+    <footer th:fragment="footer" class="ui m-bg animated fadeInUp inverted vertical segment m-padded-tb-massive">
+        <div class="ui center aligned container">
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div id="newblog-container">
+                    </div>
+                </div>
+                <div class="three wide column">
+
+                </div>
+            </div>
+            <div class="ui inverted m-black section divider"></div>
+        </div>
+    </footer>
+
+<!--通过CDN引入Semantic-UI(也可通过本地下载引入)-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="../static/js/colourBar.js" th:src="@{/js/colourBar.js}" tppabs="../static/js/colourBar.js"></script>
+
+    <script>
+        //<!--jQuery获取这个元素-->
+        $('.menu.toggle').click(function () {//toggleClass开关一样的样式
+            $('.m-item').toggleClass('m-mobile-hide');//m-item:获取那几个列表，点击的时候处理m-mobile-hide
+        });
+
+        $('.wechat').popup({                //获取wechat，鼠标控制他的时候发生事件
+            popup : $('.wechat-qr'),        //获取wechat-qr，弹出来
+            position: 'bottom center'       //position位置：在中下的位置触发
+        });
+
+        $('.qq').popup();
+
+        $('.ui.dropdown').dropdown({
+            on : 'hover'
+        });
+
+        $('#togglePassword').click(function(){
+            if($(this).hasClass('icon-eye')){
+                $('#password1').hide();
+                $('#password2').show();
+                $(this).removeClass('icon-eye').addClass('icon-eye-blocked');
+            }else{
+                $('#password1').show();
+                $('#password2').hide();
+                $(this).removeClass('icon-eye-blocked').addClass('icon-eye');
+            }
+        });
+        $('#password1').change(function () {
+            $('#password2').val($(this).val());
+        });
+        $('#password2').change(function () {
+            $('#password1').val($(this).val());
+        });
+
+        $('.ui.form').form({
+            fields : {
+                username : {
+                    identifier: 'username',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入用户名'
+                    }]
+                },
+                stuname : {
+                    identifier: 'stuname',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入姓名'
+                    }]
+                },
+                password : {
+                    identifier: 'password',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入密码'
+                    }]
+                },
+                stuid : {
+                    identifier: 'stuid',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入学号'
+                    }]
+                },
+                classes : {
+                    identifier: 'classes',
+                    rules: [{
+                        type : 'empty',
+                        prompt: '请输入班级'
+                    }]
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

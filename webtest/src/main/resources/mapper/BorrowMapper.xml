@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webtest.dao.BorrowMapper">
+    
+    <resultMap id="Borrowuser" type="book">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="auth" column="auth"/>
+        <result property="bookId" column="book_id"/>
+        <association property="user" javaType="user">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="stuname" column="stuname"/>
+            <result property="sex" column="sex"/>
+            <result property="password" column="password"/>
+            <result property="stuid" column="stuid"/>
+            <result property="classes" column="classes"/>
+            <result property="role" column="role"/>
+        </association>
+        <association property="borrow" javaType="borrow">
+            <result property="bookId" column="book_id"/>
+            <result property="stuId" column="stu_id"/>
+            <result property="borrowDate" column="borrow_date"/>
+        </association>
+    </resultMap>
+    
+    <!-- 查找所有书籍 -->
+    <insert id="insertBorrow" parameterType="borrow">
+        insert into test_brrow values (#{bookId},#{stuId},#{borrowDate})
+    </insert>
+
+    <!-- 通过id查找借阅书籍-->
+    <select id="findBookByBorrow" resultMap="Borrowuser">
+        select
+            b.id,b.name,b.auth,b.book_id,s.id,s.username,s.stuname,s.sex,s.password,s.stuid,s.classes,s.role,br.stu_id,br.borrow_date
+        from
+            test_book as b,test_student as s,test_brrow as br
+        where b.book_id = br.book_id and br.stu_id = #{stuId} and br.stu_id = s.stuid
+    </select>
+
+    <select id="searchBorrowBookByIdOrName" resultMap="Borrowuser">
+        <bind name="pattern" value="'%' + name + '%'" />
+        select
+            l.id,l.name,l.auth,l.book_id,s.id,s.username,s.stuname,s.sex,s.password,s.stuid,s.classes,s.role,br.stu_id,br.borrow_date
+        from
+            test_book as l,test_student as s,test_brrow as br
+        <where>
+            <if test="1 == 1">
+                br.stu_id = s.stuid and l.book_id = br.book_id
+            </if>
+            <if test="bookId != null and bookId != ''">
+                and l.book_id = #{bookId}
+            </if>
+            <if test="name != null and name != ''">
+                and l.name like #{pattern}
+            </if>
+        </where>
+        ORDER BY l.id
+    </select>
+</mapper>

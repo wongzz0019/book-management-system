@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webtest.dao.admin.AdminUserMapper">
+
+    <!--查找用户名密码-->
+    <select id="findAdminByNameAndPassword" resultType="admin">
+        select id,username,password,role
+        from test_admin
+        where username = #{username} and password = #{password}
+    </select>
+
+    <!--查找用户名-->
+    <select id="selectAdminByUsername" resultType="admin">
+        select id,username,password,role
+        from test_admin
+        where username = #{username}
+    </select>
+
+    <select id="findAllUser" resultType="user">
+        select * from test_student
+    </select>
+
+
+    <select id="searchStudentByIdOrName" resultType="user">
+        <bind name="stuname" value="'%' + stuname + '%'" />
+        select * from test_student
+        <where>
+            <if test="stuid != null and stuid != ''">
+                stuid = #{stuid}
+            </if>
+            <if test="stuname != null and stuname != ''">
+                and stuname like #{stuname}
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+    
+    <select id="getUserById" resultType="user">
+        select * from test_student where id = #{id}
+    </select>
+
+    <select id="getUserByStuid" resultType="user">
+        select * from test_student where stuid = #{stuid}
+    </select>
+
+    <select id="getUserByUsername" resultType="user">
+        select * from test_student where username = #{username}
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into
+            test_student
+        values
+            (#{id},#{username},#{stuname},#{sex},#{password},#{stuid},#{classes},#{role})
+    </insert>
+
+    <update id="updateUser" parameterType="user">
+        update test_student
+        set username=#{username},stuname=#{stuname},sex=#{sex},password=#{password},stuid=#{stuid},classes=#{classes}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteUserById">
+        delete from test_student where id = #{id}
+    </delete>
+</mapper>
