@@ -4,15 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.webtest.dao.BorrowMapper">
-    <!-- 基本表 -->
-    <sql id="BASE_TABLE">
-        test_brrow
-    </sql>
-
-    <!-- 基本列 -->
-    <sql id="BASE_COLUMN">
-        l.book_id,l.stu_id,l.borrow_date
-    </sql>
     
     <resultMap id="Borrowuser" type="book">
         <id property="id" column="id"/>
@@ -38,10 +29,7 @@
     
     <!-- 查找所有书籍 -->
     <insert id="insertBorrow" parameterType="borrow">
-        insert into
-            <include refid="BASE_TABLE"/>
-        values
-            (#{bookId},#{stuId},#{borrowDate})
+        insert into test_brrow values (#{bookId},#{stuId},#{borrowDate})
     </insert>
 
     <!-- 通过id查找借阅书籍-->

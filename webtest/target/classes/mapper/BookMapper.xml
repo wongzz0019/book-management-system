@@ -4,53 +4,32 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.webtest.dao.BookMapper">
-    <!-- 基本表 -->
-    <sql id="BASE_TABLE">
-        test_book
-    </sql>
-
-    <!-- 基本列 -->
-    <sql id="BASE_COLUMN">
-        l.id,l.name,l.auth,l.book_id,l.count
-    </sql>
 
     <!-- 查找所有书籍 -->
     <select id="getAllBook" resultType="book">
-        select
-            <include refid="BASE_COLUMN"/>
-        from
-            <include refid="BASE_TABLE"/> AS l
-        ORDER BY l.id
+        select id,name,auth,book_id,count from test_book ORDER BY id
     </select>
     
     <select id="searchBookByIdOrName" resultType="book">
-        <bind name="pattern" value="'%' + name + '%'" />
-        select
-        <include refid="BASE_COLUMN"/>
-        from
-        <include refid="BASE_TABLE"/> AS l
+<!--        <bind name="pattern" value="'%' + name + '%'" />-->
+        select id,name,auth,book_id,count from test_book
         <where>
             <if test="bookId != null and bookId != ''">
-                l.book_id = #{bookId}
+                book_id = #{bookId}
             </if>
             <if test="name != null and name != ''">
-                and l.name like #{pattern}
+                and name like concat('%',#{name},'%')
             </if>
         </where>
-        ORDER BY l.id
+        ORDER BY id
     </select>
 
     <select id="findBookById" resultType="book">
-        select
-        <include refid="BASE_COLUMN"/>
-        from
-        <include refid="BASE_TABLE"/> AS l
-        where id = #{id}
+        select id,name,auth,book_id,count from test_book where id = #{id}
     </select>
     
     <!-- 借阅书籍 -->
     <update id="borrowBook" parameterType="book">
-        update <include refid="BASE_TABLE"/>
-        set count = count-1 where book_id = #{bookId};
+        update test_book set count = count-1 where book_id = #{bookId};
     </update>
 </mapper>

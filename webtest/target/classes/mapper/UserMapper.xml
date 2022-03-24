@@ -4,57 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.webtest.dao.UserMapper">
-    <!-- 基本用户表 -->
-    <sql id="BASE_TABLE">
-        test_student
-    </sql>
-
-    <!-- 基本列 -->
-    <sql id="BASE_COLUMN">
-        l.id,l.username,l.stuname,l.sex,l.password,l.stuid,l.classes,l.role
-    </sql>
-
+    
     <select id="getUserByName" resultType="User">
-        select
-            <include refid="BASE_COLUMN"/>
-        from
-            <include refid="BASE_TABLE"/> AS l
-        where
-            l.username = #{username}
+        select id,username,stuname,sex,password,stuid,classes,role
+        from test_student
+        where username = #{username}
     </select>
 
     <!-- 非数据库字段，类型需写全路径-->
     <update id="updateUser" parameterType="com.webtest.vo.UpdateUser">
-        update
-            test_student
-        set
-            username=#{username},stuname=#{stuname},sex=#{sex},password=#{password},stuid=#{stuid},classes=#{classes}
-        where
-            id=#{id}
+        update test_student
+        set username=#{username},stuname=#{stuname},sex=#{sex},password=#{password},stuid=#{stuid},classes=#{classes}
+        where id=#{id}
     </update>
 
     <select id="findUserById" resultType="user">
-        select
-            <include refid="BASE_COLUMN"/>
-        from
-            <include refid="BASE_TABLE"/> AS l
-        where
-            id = #{id}
+        select id,username,stuname,sex,password,stuid,classes,role
+        from test_student where id = #{id}
     </select>
     
     <select id="findUserBystuId" resultType="user">
-        select
-            <include refid="BASE_COLUMN"/>
-        from
-            <include refid="BASE_TABLE"/> AS l
-        where
-            stuid = #{stuid}
+        select id,username,stuname,sex,password,stuid,classes,role
+        from test_student
+        where stuid = #{stuid}
     </select>
 
     <insert id="insertUser" parameterType="user">
-        insert into
-            test_student
-        values
-            (#{id},#{username},#{stuname},#{sex},#{password},#{stuid},#{classes},#{role})
+        insert into test_student
+        values (#{id},#{username},#{stuname},#{sex},#{password},#{stuid},#{classes},#{role})
     </insert>
 </mapper>

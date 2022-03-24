@@ -7,21 +7,21 @@
 
     <!-- 查找所有书籍 -->
     <select id="getAllBook" resultType="book">
-        select id,name,auth,book_id,count from test_book ORDER BY l.id
+        select id,name,auth,book_id,count from test_book ORDER BY id
     </select>
     
     <select id="searchBookByIdOrName" resultType="book">
-        <bind name="pattern" value="'%' + name + '%'" />
+<!--        <bind name="pattern" value="'%' + name + '%'" />-->
         select id,name,auth,book_id,count from test_book
         <where>
             <if test="bookId != null and bookId != ''">
                 book_id = #{bookId}
             </if>
             <if test="name != null and name != ''">
-                and name like #{pattern}
+                and name like concat('%',#{name},'%')
             </if>
         </where>
-        ORDER BY l.id
+        ORDER BY id
     </select>
 
     <select id="findBookById" resultType="book">

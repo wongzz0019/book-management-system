@@ -2,11 +2,14 @@ package com.webtest.config;
 
 import com.webtest.service.admin.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -18,6 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     protected AdminUserService adminUserService;
 
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 定制请求的授权规则
@@ -25,13 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //首页所有人可以访问.antMatchers("/admin").permitAll()
                 .antMatchers("/admin").permitAll()
                 .antMatchers("/admin/**").hasRole("admin")
-//                .antMatchers("/admin/**").permitAll()
-        // 开启自动配置的登录功能，没有权限的时候，会跳转到登录的页面！
-        // /login 请求来到登录页
-        // /login?error 重定向到这里表示登录失败
-        //http.formLogin();
-        // 自定义登录页
-//        http.
         .and().
                 formLogin()
                 .loginPage("/admin")//自定义的登录页面
@@ -43,11 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .failureUrl("/login"); //认证失败的处理url，暂时就重定向到登录页
         //关闭跨站伪造请求攻击
         http.csrf().disable();
-        //开启记住我功能,cookie 默认保存2周
-//        http.rememberMe();
-        //开启自动配置的注销的功能
-        // .logoutSuccessUrl("/"); 注销成功来到首页
-//        http.logout().logoutSuccessUrl("/toLogin");
     }
 
     //定义认证规则

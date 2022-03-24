@@ -6,14 +6,12 @@
 <mapper namespace="com.webtest.dao.ReturnMapper">
     <!-- 借阅书籍 -->
     <update id="updateReturnBook" parameterType="book">
-        update test_book
-        set count = count+1 where book_id = #{bookId};
+        update test_book set count = count+1 where book_id = #{bookId};
     </update>
     
     <delete id="deleteBorrow">
-        delete from
-            test_brrow
-        where
-            book_id = #{bookId} and stu_id = #{stuId}
+        delete from test_brrow
+        where book_id = #{bookId}
+        and stu_id = #{stuId}
     </delete>
 </mapper>

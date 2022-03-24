@@ -98,12 +98,6 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
         </dependency>
-        <!--导入shiro-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.shiro</groupId>-->
-<!--            <artifactId>shiro-spring</artifactId>-->
-<!--            <version>1.4.1</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>

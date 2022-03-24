@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/labtest?serverTimezone=GMT&ampcharacterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/labtest?serverTimezone=GMT&characterEncoding=utf-8&useUnicode=true
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource # 自定义数据源

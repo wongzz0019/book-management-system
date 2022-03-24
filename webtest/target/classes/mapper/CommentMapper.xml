@@ -13,32 +13,29 @@
     </insert>
 
     <select id="findByParentIdNull" resultType="Comment">
-        select *
-        from test_comment
+        select * from test_comment
         where parent_comment_id = #{ParentId}
         order by create_time desc
     </select>
 
     <!--查询一级子评论-->
     <select id="findByParentIdNotNull" resultType="Comment">
-        select *
-        from test_comment c
-        where c.parent_comment_id = #{id}
-        order by c.create_time desc
+        select * from test_comment
+        where parent_comment_id = #{id}
+        order by create_time desc
     </select>
 
     <!--查询二级子评论-->
     <select id="findByReplayId" resultType="Comment">
-        select *
-        from test_comment c
-        where c.parent_comment_id = #{childId}
-        order by c.create_time desc
+        select * from test_comment
+        where parent_comment_id = #{childId}
+        order by create_time desc
     </select>
 
     <select id="findByParentCommentId" resultType="Comment">
-        select c.id,c.nickname,c.content,c.create_time,c.parent_comment_id
-        from test_comment c
-        where c.parent_comment_id = #{parentCommentId}
+        select id,nickname,content,create_time,parent_comment_id
+        from test_comment
+        where parent_comment_id = #{parentCommentId}
     </select>
 
     <!--删除评论-->
