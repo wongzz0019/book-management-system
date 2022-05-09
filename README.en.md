@@ -1,11 +1,7 @@
 # 书籍管理系统
 
 #### Description
-功能：用户：登录、注册、借阅、归还、消息反馈。管理员：管理图书、管理用户
-项目使用 Springboot + Mybatis + Spring Security + Semantic UI + Thymeleaf
-mysql 5.7.22
-tomcat 9.0.54
-maven 3.6.3
+ Springboot + Mybatis + Spring Security + Semantic UI + Thymeleaf + Redis + ElasticSearch
 
 
 #### Software Architecture
